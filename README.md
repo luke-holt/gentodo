@@ -1,9 +1,9 @@
 # Overview
+NOTE: This is a WIP.
+
 This app generates a todo list from the contents of a project directory. 
 
 To skip a directory, add it to ".gentodoignore".
-
-NOTE: This is a WIP.
 
 # Usage
 **Command syntax:**
@@ -20,5 +20,6 @@ The todo comment *must* begin with "TODO:" or "FIXME:". You can add tags to thes
 /* TODO: TEST: Add unit test for this function */
 ```
 
-# Extensions
-Supported file extensions.
+# Notes
+Supported file extensions? All?
+List of dirs/files to ignore?
