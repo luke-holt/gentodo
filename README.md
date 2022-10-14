@@ -13,11 +13,16 @@ gentodo ./src <-- Generates list for src directory.
 ```
 
 **TODO Comment Syntax:**
-The todo comment *must* begin with "TODO:" or "FIXME:". You can add tags to these comments by adding them after "TODO:".
+Todo comment will be:
+- one line long
+- begin with `TODO:`, `FIXME:`, `HACK:`, or `NOTE:`
+- Topics follow the declaration and are formatted the same way
+    - i.e. `TEST:`
+- Message follows the topic and is terminated by a period (`.`)
 ```
 /* TODO: Add this very cool feature. */
-/* FIXME: Optimize this O(n^n) algo to be O(1). */
-/* TODO: TEST: Add unit test for this function */
+/* FIXME: SORT: Optimize this O(n^n) algo to be O(1). */
+/* TODO: TEST: Add unit test for this function. */
 ```
 
 # Notes

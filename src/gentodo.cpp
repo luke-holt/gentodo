@@ -1,8 +1,38 @@
 #include <iostream>
+#include <filesystem>
+#include <fstream>
+#include <string>
 
-using namespace std;
+#include "ignore_list.hpp"
+#include "todo_list.hpp"
+
+#include "scan.hpp"
+
 
 int main(/* int argc, char *argv[] */)
 {
-    cout << "Hello, world!" << endl;
+    /* Calling constructor searches for .gentodoignore in current dir "." */
+    IgnoreList ignore_list{};
+
+    TodoList list{};
+
+    /* loop through items directory */
+    for (auto& item : std::filesystem::directory_iterator{ "./src" }) {
+
+        /* if item is in ignore_list, skip */
+        if (ignore_list.contains(item.path().filename().string())) {
+            continue;
+        }
+
+        /* if item is directory, recurse */
+        if (item.is_directory()) {
+            /* TODO: this */
+            continue;
+        }
+
+        scan_file(item.path(), &list);
+    }
+
+    return 0;
 }
+

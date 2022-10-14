@@ -10,6 +10,9 @@ SRC_DIR = src
 TARGET = $(BIN_DIR)/gentodo
 
 SOURCES = \
+	ignore_list.cpp \
+	todo_list.cpp \
+	scan.cpp \
 	gentodo.cpp
 
 OBJECTS = $(addprefix $(OBJ_DIR)/,$(SOURCES:.cpp=.o))
@@ -23,7 +26,7 @@ WFLAGS = -Wall -Wextra -Wunused -Wcast-align \
 		 -Wno-missing-braces -Wmissing-declarations
 
 # Common flags. Optimize for speed, enable debug options
-COM_FLAGS = -Os -g
+COM_FLAGS = -Os -g -std=c++1z
 
 # Compiler and linker flags
 CFLAGS = $(COM_FLAGS) $(WFLAGS) $(addprefix -I,$(INC_DIR))
@@ -52,5 +55,5 @@ all: $(TARGET)
 clean:
 	@rm -r $(BLD_DIR)
 
-run:
+run: $(TARGET)
 	@./build/bin/gentodo
