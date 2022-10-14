@@ -1,9 +1,10 @@
 
 #include "todo_list.hpp"
 
+/*
 static void union();
 static int find();
-
+*/
 
 
 TodoList::~TodoList()
