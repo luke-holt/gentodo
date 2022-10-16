@@ -33,6 +33,10 @@ int main(/* int argc, char *argv[] */)
         scan_file(item.path(), &list);
     }
 
+    std::cout << list.generate_list(TODO_SORT_BY_FILE);
+    std::cout << list.generate_list(TODO_SORT_BY_TYPE);
+    std::cout << list.generate_list(TODO_SORT_BY_TOPIC);
+
     return 0;
 }
 

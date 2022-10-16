@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <map>
 
 
 struct TodoItem
@@ -25,6 +26,13 @@ struct TodoItem
 };
 
 
+enum TodoFlags {
+    TODO_SORT_BY_FILE,
+    TODO_SORT_BY_TYPE,
+    TODO_SORT_BY_TOPIC,
+};
+
+
 class TodoList
 {
 public:
@@ -34,17 +42,21 @@ public:
     /* Add new todo entry to the list */
     void append(TodoItem *item);
 
-    /* Return a formatted list sorted by topic */
-    const std::string list_by_topic() const;
-
-    /* Return a formatted list sorted by type */
-    const std::string list_by_type() const;
-
-    /* Return a formatted list sorted by file */
-    const std::string list_by_file() const;
+    /* Generate list */
+    const std::string generate_list(TodoFlags flags);
 
 private:
     std::vector<TodoItem*> m_items;
+
+    /* Helper fns to sort items */
+    void sort_by_file(); /* Sort by file */
+    void sort_by_type(); /* Sort by type */
+    void sort_by_topic(); /* Sort by topic */
+
+    /* Maps to store sorted items */
+    std::map<std::string, std::vector<TodoItem*>> m_sorted_by_file; /* m_sorted_by_file */
+    std::map<std::string, std::vector<TodoItem*>> m_sorted_by_type; /* m_sorted_by_type */
+    std::map<std::string, std::vector<TodoItem*>> m_sorted_by_topic; /* m_sorted_by_topic */
 };
 
 #endif
