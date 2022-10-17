@@ -22,6 +22,12 @@ void TodoList::append(TodoItem *item)
 }
 
 
+bool TodoList::empty()
+{
+    return m_items.empty();
+}
+
+
 const std::string TodoList::generate_list(TodoFlags flags)
 {
     std::map<std::string, std::vector<TodoItem*>> *selected_map;

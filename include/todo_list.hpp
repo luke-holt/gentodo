@@ -45,6 +45,9 @@ public:
     /* Generate list */
     const std::string generate_list(TodoFlags flags);
 
+    /* Check if list is empty */
+    bool empty();
+
 private:
     std::vector<TodoItem*> m_items;
 

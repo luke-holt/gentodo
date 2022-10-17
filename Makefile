@@ -30,24 +30,24 @@ COM_FLAGS = -Os -g -std=c++1z
 
 # Compiler and linker flags
 CFLAGS = $(COM_FLAGS) $(WFLAGS) $(addprefix -I,$(INC_DIR))
-LFlAGS = $(COM_FLAGS) $(addprefix -L,$(LIB_DIR))
+LDFlAGS = $(COM_FLAGS) $(addprefix -L,$(LIB_DIR))
 
 # Compile
 $(OBJ_DIR)%.o: $(SRC_DIR)%.cpp
 	@mkdir -p $(dir $@)
 	@echo "Compiling $@..."
-	$(CC) $(CFLAGS) -c $^ -o $@
+	@$(CC) $(CFLAGS) -c $^ -o $@
 	@echo ""
 
 # Link
 $(TARGET): $(OBJECTS)
 	@mkdir -p $(dir $@)
 	@echo "Linking..."
-	$(CC) $(LFLAGS) -o $@ $^
+	@$(CC) $(LDFLAGS) -o $@ $^
 	@echo ""
 
 # Phony targets
-.PHONY: all clean run
+.PHONY: all clean run test
 
 # default
 all: $(TARGET)
@@ -57,3 +57,5 @@ clean:
 
 run: $(TARGET)
 	@./build/bin/gentodo
+
+include test/test.mk
