@@ -1,8 +1,8 @@
 #ifndef TODOLIST_HPP__
 #define TODOLIST_HPP__
 
-#include <map>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 struct TodoItem {
@@ -50,9 +50,9 @@ class TodoList {
   std::vector<TodoItem *> m_items;
 
   /* Helper fns to sort items */
-  void m_sort_by_file();  /* Sort by file */
-  void m_sort_by_type();  /* Sort by type */
-  void m_sort_by_topic(); /* Sort by topic */
+  void m_group_by_file();  /* Sort by file */
+  void m_group_by_type();  /* Sort by type */
+  void m_group_by_topic(); /* Sort by topic */
 
   /* Helper fns to print formatted lists */
   const std::string m_print_by_file() const;  /* Print by file */
@@ -60,12 +60,12 @@ class TodoList {
   const std::string m_print_by_topic() const; /* Print by topic */
 
   /* Maps to store sorted items */
-  std::map<std::string, std::vector<TodoItem *>>
-      m_sorted_by_file; /* m_sorted_by_file */
-  std::map<std::string, std::vector<TodoItem *>>
-      m_sorted_by_type; /* m_sorted_by_type */
-  std::map<std::string, std::vector<TodoItem *>>
-      m_sorted_by_topic; /* m_sorted_by_topic */
+  std::unordered_map<std::string, std::vector<TodoItem *>>
+      m_grouped_by_file; /* m_grouped_by_file */
+  std::unordered_map<std::string, std::vector<TodoItem *>>
+      m_grouped_by_type; /* m_grouped_by_type */
+  std::unordered_map<std::string, std::vector<TodoItem *>>
+      m_grouped_by_topic; /* m_grouped_by_topic */
 };
 
 #endif

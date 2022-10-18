@@ -7,4 +7,4 @@ repos:
     description: Format files with ClangFormat.
     language: system
     files: \.(c|cc|cxx|cpp|h|hpp|hxx)$
-    args: ['-fallback-style=none', '-i']
+    args: ['-fallback-style=none']
