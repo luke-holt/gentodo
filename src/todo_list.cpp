@@ -1,8 +1,7 @@
-#include "todo_list.hpp"
-
 #include <iostream>
 #include <unordered_map>
 
+#include "todo_list.hpp"
 #include "union_find.hpp"
 
 TodoList::~TodoList() {
