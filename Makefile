@@ -35,16 +35,14 @@ LDFlAGS = $(COM_FLAGS) $(addprefix -L,$(LIB_DIR))
 # Compile
 $(OBJ_DIR)%.o: $(SRC_DIR)%.cpp
 	@mkdir -p $(dir $@)
-	@echo "Compiling $@..."
+	@echo "Compiling $@"
 	@$(CC) $(CFLAGS) -c $^ -o $@
-	@echo ""
 
 # Link
 $(TARGET): $(OBJECTS)
 	@mkdir -p $(dir $@)
-	@echo "Linking..."
+	@echo "Linking."
 	@$(CC) $(LDFLAGS) -o $@ $^
-	@echo ""
 
 # Phony targets
 .PHONY: all clean run test

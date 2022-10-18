@@ -46,15 +46,18 @@ public:
     const std::string generate_list(TodoFlags flags);
 
     /* Check if list is empty */
-    bool empty();
+    bool empty() const;
+
+    /* Get number of items in TodoList */
+    int size() const;
 
 private:
     std::vector<TodoItem*> m_items;
 
     /* Helper fns to sort items */
-    void sort_by_file(); /* Sort by file */
-    void sort_by_type(); /* Sort by type */
-    void sort_by_topic(); /* Sort by topic */
+    void m_sort_by_file(); /* Sort by file */
+    void m_sort_by_type(); /* Sort by type */
+    void m_sort_by_topic(); /* Sort by topic */
 
     /* Maps to store sorted items */
     std::map<std::string, std::vector<TodoItem*>> m_sorted_by_file; /* m_sorted_by_file */
@@ -63,3 +66,4 @@ private:
 };
 
 #endif
+

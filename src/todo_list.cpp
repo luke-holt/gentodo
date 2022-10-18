@@ -22,11 +22,16 @@ void TodoList::append(TodoItem *item)
 }
 
 
-bool TodoList::empty()
+bool TodoList::empty() const
 {
     return m_items.empty();
 }
 
+
+int TodoList::size() const
+{
+    return m_items.size();
+}
 
 const std::string TodoList::generate_list(TodoFlags flags)
 {
@@ -34,15 +39,15 @@ const std::string TodoList::generate_list(TodoFlags flags)
 
     switch (flags) {
     case TODO_SORT_BY_FILE:
-        sort_by_file();
+        m_sort_by_file();
         selected_map = &m_sorted_by_file;
         break;
     case TODO_SORT_BY_TYPE:
-        sort_by_type();
+        m_sort_by_type();
         selected_map = &m_sorted_by_type;
         break;
     case TODO_SORT_BY_TOPIC:
-        sort_by_topic();
+        m_sort_by_topic();
         selected_map = &m_sorted_by_topic;
         break;
     }
@@ -64,7 +69,7 @@ const std::string TodoList::generate_list(TodoFlags flags)
 }
 
 
-void TodoList::sort_by_file()
+void TodoList::m_sort_by_file()
 {
     /* Sort items */
     for (auto item : m_items) {
@@ -88,7 +93,7 @@ void TodoList::sort_by_file()
 }
 
 
-void TodoList::sort_by_type()
+void TodoList::m_sort_by_type()
 {
     /* Sort items */
     for (auto item : m_items) {
@@ -112,7 +117,7 @@ void TodoList::sort_by_type()
 }
 
 
-void TodoList::sort_by_topic()
+void TodoList::m_sort_by_topic()
 {
     /* Sort items */
     for (auto item : m_items) {
