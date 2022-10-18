@@ -4,8 +4,8 @@
 #include <string>
 
 #include "ignore_list.hpp"
-#include "scan.hpp"
 #include "todo_list.hpp"
+#include "util.hpp"
 
 int main(/* int argc, char *argv[] */) {
   /* Calling constructor searches for .gentodoignore in current dir "." */

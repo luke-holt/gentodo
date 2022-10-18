@@ -1,5 +1,4 @@
-/* TODO: delete this */
-#include "scan.hpp"
+#include "util.hpp"
 
 #include <fstream>
 #include <iostream>

@@ -12,7 +12,7 @@ TARGET = $(BIN_DIR)/gentodo
 SOURCES = \
 	ignore_list.cpp \
 	todo_list.cpp \
-	scan.cpp \
+	util.cpp \
 	gentodo.cpp
 
 OBJECTS = $(addprefix $(OBJ_DIR)/,$(SOURCES:.cpp=.o))
