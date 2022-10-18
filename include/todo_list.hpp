@@ -1,7 +1,6 @@
 #ifndef TODOLIST_HPP__
 #define TODOLIST_HPP__
 
-#include <filesystem>
 #include <map>
 #include <string>
 #include <vector>
@@ -17,7 +16,7 @@ struct TodoItem {
   std::string msg;
 
   /* Path to the file containing the entry */
-  std::filesystem::path filepath;
+  std::string filepath;
 
   /* Line number */
   int nline;
