@@ -80,3 +80,20 @@ static void sort_token(std::string token, TodoItem *item) {
     item->msg.append(token + " ");
   }
 }
+
+void write_list_to_file(const std::string markdown_list, const std::string filename) {
+  std::ofstream file;
+
+  file.open(filename);
+
+  if (!file.is_open()) {
+    /* TODO: ERROR: Could not open file */
+    std::cout << "Could not open file\n";
+    return;
+  }
+
+  file << markdown_list;
+
+  file.close();
+  return;
+}

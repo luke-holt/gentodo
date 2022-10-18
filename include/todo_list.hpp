@@ -55,6 +55,11 @@ class TodoList {
   void m_sort_by_type();  /* Sort by type */
   void m_sort_by_topic(); /* Sort by topic */
 
+  /* Helper fns to print formatted lists */
+  const std::string m_print_by_file() const;  /* Print by file */
+  const std::string m_print_by_type() const;  /* Print by type */
+  const std::string m_print_by_topic() const; /* Print by topic */
+
   /* Maps to store sorted items */
   std::map<std::string, std::vector<TodoItem *>>
       m_sorted_by_file; /* m_sorted_by_file */

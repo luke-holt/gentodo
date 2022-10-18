@@ -37,13 +37,17 @@ const std::string TodoList::generate_list(TodoFlags flags) {
       break;
   }
 
+  if (selected_map->empty()) {
+    return "There are no tasks left to do :)";
+  }
+
   /* Print items into string */
   std::string out;
   for (auto group : *selected_map) {
-    out += group.first + " :\n";
+    out += "- [ ]**" + group.first + "** :\n";
     for (auto item : group.second) {
-      out += item->type + ": ";
-      for (auto topic : item->topics) out += topic + ": ";
+      out += "**" + item->type + "**: ";
+      for (auto topic : item->topics) out += "**" + topic + "**: ";
       out += item->msg + '\n';
     }
     out += '\n';
@@ -133,4 +137,18 @@ void TodoList::m_sort_by_topic() {
       }
     }
   }
+}
+
+/* TODO: TODOLIST: Write these methods */
+
+const std::string TodoList::m_print_by_file() const {
+  return "TODO";
+}
+
+const std::string TodoList::m_print_by_type() const {
+  return "TODO";
+}
+
+const std::string TodoList::m_print_by_topic() const {
+  return "TODO";
 }

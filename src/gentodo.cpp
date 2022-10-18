@@ -29,9 +29,9 @@ int main(/* int argc, char *argv[] */) {
     scan_file(item.path(), &list);
   }
 
-  std::cout << list.generate_list(TODO_SORT_BY_FILE);
-  std::cout << list.generate_list(TODO_SORT_BY_TYPE);
-  std::cout << list.generate_list(TODO_SORT_BY_TOPIC);
+  write_list_to_file(list.generate_list(TODO_SORT_BY_FILE), "./list_by_file.txt");
+  write_list_to_file(list.generate_list(TODO_SORT_BY_TYPE), "./list_by_type.txt");
+  write_list_to_file(list.generate_list(TODO_SORT_BY_TOPIC), "./list_by_topic.txt");
 
   return 0;
 }
