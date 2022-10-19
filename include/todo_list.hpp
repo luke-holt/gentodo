@@ -1,7 +1,6 @@
 #ifndef TODOLIST_HPP__
 #define TODOLIST_HPP__
 
-#include <filesystem>
 #include <map>
 #include <string>
 #include <vector>
@@ -17,16 +16,16 @@ struct TodoItem {
   std::string msg;
 
   /* Path to the file containing the entry */
-  std::filesystem::path filepath;
+  std::string filepath;
 
   /* Line number */
   int nline;
 };
 
 enum TodoFlags {
-  TODO_SORT_BY_FILE,
-  TODO_SORT_BY_TYPE,
-  TODO_SORT_BY_TOPIC,
+  TODO_BY_FILE,
+  TODO_BY_TYPE,
+  TODO_BY_TOPIC,
 };
 
 class TodoList {
@@ -34,6 +33,11 @@ class TodoList {
   TodoList() { /* nothing */
   }
   ~TodoList();
+
+  /* List of TodoItems */
+  typedef std::vector<TodoItem *> ItemList;
+  /* Table that is used to map a string to a corresponding ItemList */
+  typedef std::map<std::string, ItemList> ItemTable;
 
   /* Add new todo entry to the list */
   void append(TodoItem *item);
@@ -48,25 +52,17 @@ class TodoList {
   int size() const;
 
  private:
-  std::vector<TodoItem *> m_items;
+  ItemList m_items;
 
   /* Helper fns to sort items */
-  void m_sort_by_file();  /* Sort by file */
-  void m_sort_by_type();  /* Sort by type */
-  void m_sort_by_topic(); /* Sort by topic */
+  static ItemTable m_group_by_file(ItemList list);  /* Sort by file */
+  static ItemTable m_group_by_type(ItemList list);  /* Sort by type */
+  static ItemTable m_group_by_topic(ItemList list); /* Sort by topic */
 
   /* Helper fns to print formatted lists */
-  const std::string m_print_by_file() const;  /* Print by file */
-  const std::string m_print_by_type() const;  /* Print by type */
-  const std::string m_print_by_topic() const; /* Print by topic */
-
-  /* Maps to store sorted items */
-  std::map<std::string, std::vector<TodoItem *>>
-      m_sorted_by_file; /* m_sorted_by_file */
-  std::map<std::string, std::vector<TodoItem *>>
-      m_sorted_by_type; /* m_sorted_by_type */
-  std::map<std::string, std::vector<TodoItem *>>
-      m_sorted_by_topic; /* m_sorted_by_topic */
+  static const std::string m_print_by_file(ItemList list);  /* Print by file */
+  static const std::string m_print_by_type(ItemList list);  /* Print by type */
+  static const std::string m_print_by_topic(ItemList list); /* Print by topic */
 };
 
 #endif

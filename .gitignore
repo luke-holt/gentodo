@@ -3,4 +3,3 @@ build/
 .vscode/
 compile_commands.json
 commit_msg.txt
-.clang-format

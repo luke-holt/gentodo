@@ -29,9 +29,9 @@ int main(/* int argc, char *argv[] */) {
     scan_file(item.path(), &list);
   }
 
-  write_list_to_file(list.generate_list(TODO_SORT_BY_FILE), "./list_by_file.txt");
-  write_list_to_file(list.generate_list(TODO_SORT_BY_TYPE), "./list_by_type.txt");
-  write_list_to_file(list.generate_list(TODO_SORT_BY_TOPIC), "./list_by_topic.txt");
+  write_list_to_file(list.generate_list(TODO_BY_FILE), "./list_by_file.md");
+  write_list_to_file(list.generate_list(TODO_BY_TYPE), "./list_by_type.md");
+  write_list_to_file(list.generate_list(TODO_BY_TOPIC), "./list_by_topic.md");
 
   return 0;
 }
