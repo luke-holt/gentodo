@@ -6,10 +6,14 @@
 
 class IgnoreList {
  public:
-  IgnoreList();
+  IgnoreList(){/*nothing */};
+  IgnoreList(const std::string ignore_path);
   ~IgnoreList(){/* nothing */};
 
-  bool contains(std::string file) const;
+  /* Load contents of .gentodoignore into m_items */
+  void load(const std::string ignore_path);
+
+  bool contains(const std::string file) const;
 
   const std::string contents() const;
 

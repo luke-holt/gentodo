@@ -4,8 +4,10 @@
 #include <iostream>
 #include <sstream>
 
-IgnoreList::IgnoreList() {
-  std::ifstream ignore_fs{".gentodoignore"};
+IgnoreList::IgnoreList(const std::string ignore_path) { load(ignore_path); }
+
+void IgnoreList::load(const std::string ignore_path) {
+  std::ifstream ignore_fs{ignore_path};
   std::string line;
 
   if (ignore_fs.is_open()) {
@@ -17,7 +19,7 @@ IgnoreList::IgnoreList() {
       m_items.push_back(line);
     }
   } else {
-    std::cout << "Could not find ignore file\n";
+    std::cout << "Could not find ignore file " << ignore_path << '\n';
   }
 }
 

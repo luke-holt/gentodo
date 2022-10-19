@@ -81,10 +81,10 @@ static void sort_token(std::string token, TodoItem *item) {
   }
 }
 
-void write_list_to_file(const std::string markdown_list, const std::string filename) {
+void write_list_to_file(GentodoData *data) {
   std::ofstream file;
 
-  file.open(filename);
+  file.open(data->list_filename);
 
   if (!file.is_open()) {
     /* TODO: ERROR: Could not open file */
@@ -92,8 +92,35 @@ void write_list_to_file(const std::string markdown_list, const std::string filen
     return;
   }
 
-  file << markdown_list;
+  file << data->todo_list->generate_list(data->sort_flag);
 
   file.close();
   return;
+}
+
+void scan_dir(const std::string dir, GentodoData *data) {
+  /* Directory iterator */
+  for (auto &item : std::filesystem::directory_iterator{dir}) {
+    std::string item_path = item.path().string();
+
+    /* If item is in ignore_list, skip */
+    if (data->ignore_list->contains(item_path)) {
+      continue;
+    }
+
+    if (item.is_directory()) {
+      scan_dir(item_path, data);
+    }
+
+    if (data->file_ext_regex != "") {
+      /* Get regex expression from input */
+      std::regex exp(data->file_ext_regex);
+
+      std::string ext(item.path().extension());
+
+      if (std::regex_search(ext, exp)) {
+        scan_file(item_path, data->todo_list);
+      }
+    }
+  }
 }

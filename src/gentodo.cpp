@@ -12,90 +12,70 @@
 #include "todo_list.hpp"
 #include "util.hpp"
 
-static int mm_monkey(TodoFlags flags, std::string ext_regex) {
-  /* Calling constructor searches for .gentodoignore in current dir "." */
-  IgnoreList ignore_list{};
-
-  TodoList list{};
-
-  /* loop through items directory */
-  for (auto &item : std::filesystem::directory_iterator{"./src"}) {
-    /* if item is in ignore_list, skip */
-    if (ignore_list.contains(item.path().filename().string())) {
-      continue;
-    }
-
-    /* if item is directory, recurse */
-    if (item.is_directory()) {
-      /* TODO: Iterate into directory */
-      continue;
-    }
-
-    if (ext_regex != "") {
-      /* Get regex expression from input */
-      std::regex exp(ext_regex);
-
-      std::string ext(item.path().extension());
-
-      if (std::regex_match(ext, exp)) {
-        scan_file(item.path(), &list);
-      }
-    }
-
-    scan_file(item.path(), &list);
-  }
-
-  write_list_to_file(list.generate_list(flags), "./TODO.md");
-
-  return 0;
-}
+static void print_help();
 
 int main(int argc, char *argv[]) {
-  /* Options */
-  /* -s (file|type|topic) */
-  /* -e regex */
-
-  char *ext_regex;
-  TodoFlags sort_opt;
-
   int ret_val;
+  std::regex valid_file_regex("^[a-zA-Z0-9]+\\.?[a-zA-Z0-9]+$");
+
+  /* Object to be passed around */
+  GentodoData gentodo_data = {
+      .ignore_list = new IgnoreList(".gentodoignore"),
+      .todo_list = new TodoList(),
+      .list_filename = "TODO.md", /* Default filename */
+  };
 
   for (;;) {
-    ret_val = getopt(argc, argv, "e:s:h");
+    ret_val = getopt(argc, argv, "e:s:o:h");
 
     if (ret_val == -1) {
       break;
     }
 
     switch (ret_val) {
-      case 'e': /* Extensions regex */
-        ext_regex = optarg;
+      case 'e': /* Regex expression to match file extensions to scan */
+        gentodo_data.file_ext_regex = optarg;
         break;
 
       case 's': /* Sort by */
         if (strcmp(optarg, "file") == 0) {
-          sort_opt = TODO_BY_FILE;
+          gentodo_data.sort_flag = TODO_BY_FILE;
         } else if (strcmp(optarg, "type") == 0) {
-          sort_opt = TODO_BY_TYPE;
+          gentodo_data.sort_flag = TODO_BY_TYPE;
         } else if (strcmp(optarg, "topic") == 0) {
-          sort_opt = TODO_BY_TOPIC;
+          gentodo_data.sort_flag = TODO_BY_TOPIC;
         } else {
-          fprintf(
-              stderr,
-              "Invalid option to sort-by. Must be either file, type or topic");
+          fprintf(stderr,
+                  "Invalid option to sort-by. Must be either 'file', 'type' or "
+                  "'topic'.");
           return -1;
         }
         break;
 
+      case 'o': /* output name */
+        if (std::regex_match(optarg, valid_file_regex)) {
+          gentodo_data.list_filename = optarg;
+        } else {
+          fprintf(stderr, "Invalid filename, see help for details.");
+          return -1;
+        }
+        break;
       case '?':
       case 'h':
-        /* TODO: CMDLN: Add help message */
-        std::cout << "I cannot help you, my child.\n";
       default:
-        fprintf(stdout, "mm monkey\n");
+        print_help();
         break;
     }
   }
 
-  return mm_monkey(sort_opt, ext_regex);
+  scan_dir(".", &gentodo_data);
+
+  write_list_to_file(&gentodo_data);
+
+  return 0;
+}
+
+static void print_help() {
+  /* TODO: CMDLN: Add help message */
+  std::cout << "Help msg\n";
 }
