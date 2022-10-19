@@ -11,7 +11,7 @@ TEST_LDFLAGS = $(LDFLAGS) \
 # Files
 TEST_SRCS = \
 	todo_list_test.cpp \
-	union_find_test.cpp
+	disjoint_set_test.cpp
 
 TEST_NAMES = $(TEST_SRCS:.cpp=)
 

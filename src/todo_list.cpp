@@ -2,7 +2,6 @@
 #include <unordered_map>
 
 #include "todo_list.hpp"
-#include "union_find.hpp"
 
 TodoList::~TodoList() {
   for (auto item : m_items) {
@@ -17,158 +16,97 @@ bool TodoList::empty() const { return m_items.empty(); }
 int TodoList::size() const { return m_items.size(); }
 
 const std::string TodoList::generate_list(TodoFlags flags) {
-  std::unordered_map<std::string, std::vector<TodoItem *>> *selected_map;
+  ItemTable table;
 
   switch (flags) {
-    case TODO_SORT_BY_FILE:
-      m_group_by_file();
-      selected_map = &m_grouped_by_file;
-      break;
-    case TODO_SORT_BY_TYPE:
-      m_group_by_type();
-      selected_map = &m_grouped_by_type;
-      break;
-    case TODO_SORT_BY_TOPIC:
-      m_group_by_topic();
-      selected_map = &m_grouped_by_topic;
-      break;
+    case TODO_BY_FILE:
+      return m_print_by_file(m_items);
+    case TODO_BY_TYPE:
+      return m_print_by_type(m_items);
+    case TODO_BY_TOPIC:
+      return m_print_by_topic(m_items);
   }
-
-  if (selected_map->empty()) {
-    return "There are no tasks left to do :)";
-  }
-
-  /* Print items into string */
-  std::vector<std::string> col1;
-  int col1_max_len = 0;
-  std::vector<std::string> col2;
-  int col2_max_len = 0;
-  std::vector<std::string> col3;
-  int col3_max_len = 0;
-  std::vector<std::string> col4;
-
-  auto ceil = [](int a, int b) { return (a > b) ? a : b; };
-
-  for (auto group : *selected_map) {
-    for (auto item : group.second) {
-      col1.push_back(group.first);
-      col1_max_len = ceil((int)(group.first.size()), col1_max_len);
-
-      col2.push_back(item->type);
-      col2_max_len = ceil((int)(item->type.size()), col2_max_len);
-
-      for (auto topic : item->topics) {
-        col3.push_back(topic);
-        col3_max_len = ceil((int)(topic.size()), col3_max_len);
-      }
-      if (col3.empty()) {
-        col3.push_back("");
-      }
-
-      col4.push_back(item->msg);
-    }
-  }
-
-  /* lambda to insert appropriate number of spaces to align columns */
-  auto diff = [](std::string in, int max_len) {
-    std::string out;
-    int x = (8 - (max_len % 4) + (max_len - (int)(in.size())));
-    for (int i = 0; i < x; i++) out += ' ';
-    return out;
-  };
-
-  std::string out;
-  for (int i = 0; i < (int)col1.size(); i++) {
-    out += col1[i];
-    out += diff(col1[i], col1_max_len);
-
-    out += col2[i];
-    out += diff(col2[i], col2_max_len);
-
-    out += col3[i];
-    out += diff(col3[i], col3_max_len);
-
-    out += col4[i] + '\n';
-  }
-  out += '\n';
-
-  return out;
 }
 
-void TodoList::m_group_by_file() {
-  /* Sort items */
-  for (auto item : m_items) {
-    auto map_iter = m_grouped_by_file.find(item->filepath);
+TodoList::ItemTable TodoList::m_group_by_file(TodoList::ItemList list) {
+  ItemTable table;
 
-    /* Group exist? */
-    if (map_iter == m_grouped_by_file.end()) { /* group don't exist */
-      std::vector<TodoItem *> t;
+  for (auto item : list) {
+    auto map_iter = table.find(item->filepath);
+
+    if (map_iter == table.end()) { /* group don't exist */
+      ItemList t;
 
       /* Add current item to vector */
       t.push_back(item);
 
       /* Create mapping */
-      m_grouped_by_file.emplace(item->filepath, t);
+      table.emplace(item->filepath, t);
     } else { /* group exist */
       /* Add todo item to approprate vector */
       map_iter->second.push_back(item);
     }
   }
+
+  return table;
 }
 
-void TodoList::m_group_by_type() {
-  /* Sort items */
-  for (auto item : m_items) {
-    auto map_iter = m_grouped_by_type.find(item->type);
+TodoList::ItemTable TodoList::m_group_by_type(TodoList::ItemList list) {
+  ItemTable table;
 
-    /* Group exist? */
-    if (map_iter == m_grouped_by_type.end()) { /* group don't exist */
-      std::vector<TodoItem *> t;
+  for (auto item : list) {
+    auto map_iter = table.find(item->type);
+
+    if (map_iter == table.end()) { /* group don't exist */
+      ItemList t;
 
       /* Add current item to vector */
       t.push_back(item);
 
       /* Create mapping */
-      m_grouped_by_type.emplace(item->type, t);
+      table.emplace(item->type, t);
     } else { /* group exist */
       /* Add todo item to approprate vector */
       map_iter->second.push_back(item);
     }
   }
+
+  return table;
 }
 
-void TodoList::m_group_by_topic() {
-  /* Sort items */
-  for (auto item : m_items) {
+TodoList::ItemTable TodoList::m_group_by_topic(TodoList::ItemList list) {
+  ItemTable table;
+
+  for (auto item : list) {
     if (item->topics.empty()) { /* No topic assigned */
-      auto map_iter = m_grouped_by_topic.find("NO_TOPIC");
+      auto map_iter = table.find("NO TOPIC");
 
       /* Group exist? */
-      if (map_iter == m_grouped_by_topic.end()) { /* group don't exist */
-        std::vector<TodoItem *> t;
+      if (map_iter == table.end()) { /* group don't exist */
+        ItemList t;
 
         /* Add current item to vector */
         t.push_back(item);
 
         /* Create mapping */
-        m_grouped_by_topic.emplace("NO_TOPIC", t);
+        table.emplace("NO TOPIC", t);
       } else { /* group exist */
         /* Add todo item to approprate vector */
         map_iter->second.push_back(item);
       }
     } else {
       for (auto topic : item->topics) { /* For each topic assigned to item */
-        auto map_iter = m_grouped_by_topic.find(topic);
+        auto map_iter = table.find(topic);
 
         /* Group exist? */
-        if (map_iter == m_grouped_by_topic.end()) { /* group don't exist */
-          std::vector<TodoItem *> t;
+        if (map_iter == table.end()) { /* group don't exist */
+          ItemList t;
 
           /* Add current item to vector */
           t.push_back(item);
 
           /* Create mapping */
-          m_grouped_by_topic.emplace(topic, t);
+          table.emplace(topic, t);
         } else { /* group exist */
           /* Add todo item to approprate vector */
           map_iter->second.push_back(item);
@@ -176,12 +114,107 @@ void TodoList::m_group_by_topic() {
       }
     }
   }
+
+  return table;
 }
 
-/* TODO: TODOLIST: Write these methods */
+const std::string TodoList::m_print_by_file(ItemList list) {
+  std::vector<std::string> lines;
+  lines.push_back("# Todo list\n");
 
-const std::string TodoList::m_print_by_file() const { return "TODO"; }
+  /* Group by file */
+  ItemTable table = m_group_by_file(list);
 
-const std::string TodoList::m_print_by_type() const { return "TODO"; }
+  for (auto group : table) {
+    lines.push_back('`' + group.first + '`');
 
-const std::string TodoList::m_print_by_topic() const { return "TODO"; }
+    /* Group by type */
+    ItemTable sub_table = m_group_by_type(group.second);
+
+    for (auto sub_group : sub_table) {
+      /* group type */
+      lines.push_back("- " + sub_group.first);
+
+      for (auto item : sub_group.second) {
+        std::string topics;
+        for (auto topic : item->topics) {
+          topics += topic + ": ";
+        }
+        lines.push_back("  - [ ] " + std::to_string(item->nline) + ": " +
+                        topics + item->msg);
+      }
+    }
+    lines.push_back("");
+  }
+  std::string out;
+  for (auto line : lines) {
+    out += line + '\n';
+  }
+  return out;
+}
+
+const std::string TodoList::m_print_by_type(ItemList list) {
+  std::vector<std::string> lines;
+  lines.push_back("# Todo list\n");
+
+  /* Group by file */
+  ItemTable table = m_group_by_type(list);
+
+  for (auto group : table) {
+    lines.push_back("**" + group.first + "**");
+
+    /* Group by type */
+    ItemTable sub_table = m_group_by_file(group.second);
+
+    for (auto sub_group : sub_table) {
+      /* group type */
+      lines.push_back("- `" + sub_group.first + '`');
+
+      for (auto item : sub_group.second) {
+        std::string topics;
+        for (auto topic : item->topics) {
+          topics += topic + ": ";
+        }
+        lines.push_back("  - [ ] " + std::to_string(item->nline) + ": " +
+                        topics + item->msg);
+      }
+    }
+    lines.push_back("");
+  }
+  std::string out;
+  for (auto line : lines) {
+    out += line + '\n';
+  }
+  return out;
+}
+
+const std::string TodoList::m_print_by_topic(ItemList list) {
+  std::vector<std::string> lines;
+  lines.push_back("# Todo list\n");
+
+  /* Group by file */
+  ItemTable table = m_group_by_topic(list);
+
+  for (auto group : table) {
+    lines.push_back("**" + group.first + "**");
+
+    /* Group by type */
+    ItemTable sub_table = m_group_by_file(group.second);
+
+    for (auto sub_group : sub_table) {
+      /* group type */
+      lines.push_back("- `" + sub_group.first + '`');
+
+      for (auto item : sub_group.second) {
+        lines.push_back("  - [ ] " + std::to_string(item->nline) + ": " +
+                        item->type + ": " + item->msg);
+      }
+    }
+    lines.push_back("");
+  }
+  std::string out;
+  for (auto line : lines) {
+    out += line + '\n';
+  }
+  return out;
+}
