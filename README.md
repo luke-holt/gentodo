@@ -10,12 +10,18 @@ To skip a directory, add it to ".gentodoignore".
 # Usage
 **Command syntax:**
 ```
-gentodo  <-- Generates list for working directory.
-gentodo ./src <-- Generates list for src directory.
+gentodo -s <sort-by> -e <regex-file-ext> -o <output-file> -h
 ```
+Sort by:
+- `file`
+- `type`
+- `topic`
+
+Regex file extension:
+- i.e. "(cpp|hpp)" for `.cpp` and `.hpp` files
 
 **TODO Comment Syntax:**
-Todo comment will be:
+Todo comment needse to be:
 - one line long
 - begin with `TODO:`, `FIXME:`, `HACK:`, or `NOTE:`
 - Topics follow the declaration and are formatted the same way
@@ -27,6 +33,11 @@ Todo comment will be:
 /* TODO: TEST: Add unit test for this function. */
 ```
 
+# Ignore file
+`.gentodoignore`... this needs a new name.
+
+The app tries to load this file from the current directory. To specify the ignore file use the `--ignore` option.
+
 # Notes
-Supported file extensions? All?
-List of dirs/files to ignore?
+Supported file extensions? Anything that contains ascii.
+
