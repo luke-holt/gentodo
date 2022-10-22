@@ -10,7 +10,7 @@ To skip a directory, add it to ".gentodoignore".
 # Usage
 **Command syntax:**
 ```
-gentodo -s <sort-by> -e <regex-file-ext> -o <output-file> -h
+gentodo -s <sort-by> -e <regex-file-ext> -f <ignore-file> -o <output-file> -h
 ```
 Sort by:
 - `file`

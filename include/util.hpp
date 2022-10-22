@@ -12,6 +12,7 @@ struct GentodoData {
   TodoList *todo_list;
   std::string file_ext_regex;
   std::string list_filename;
+  std::string path;
   TodoFlags sort_flag;
 };
 
