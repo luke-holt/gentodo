@@ -1,8 +1,10 @@
-.git/
-.cache/
-build/
+.git
+.cache
+.vscode
+build
+.clang-format
 .gentodoignore
 .gitignore
+.pre-commit-config.yaml
 LICENSE
-todo_list.md
-README.md
+

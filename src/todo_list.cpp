@@ -140,7 +140,7 @@ const std::string TodoList::m_print_by_file(ItemList list) {
         for (auto topic : item->topics) {
           topics += topic + ": ";
         }
-        lines.push_back("  - [ ] " + std::to_string(item->nline) + ": " +
+        lines.push_back("  - [ ] line " + std::to_string(item->nline) + ": " +
                         topics + item->msg);
       }
     }
@@ -175,7 +175,7 @@ const std::string TodoList::m_print_by_type(ItemList list) {
         for (auto topic : item->topics) {
           topics += topic + ": ";
         }
-        lines.push_back("  - [ ] " + std::to_string(item->nline) + ": " +
+        lines.push_back("  - [ ] line " + std::to_string(item->nline) + ": " +
                         topics + item->msg);
       }
     }
@@ -206,7 +206,7 @@ const std::string TodoList::m_print_by_topic(ItemList list) {
       lines.push_back("- `" + sub_group.first + '`');
 
       for (auto item : sub_group.second) {
-        lines.push_back("  - [ ] " + std::to_string(item->nline) + ": " +
+        lines.push_back("  - [ ] line " + std::to_string(item->nline) + ": " +
                         item->type + ": " + item->msg);
       }
     }

@@ -16,17 +16,20 @@ static void print_help();
 
 int main(int argc, char *argv[]) {
   int ret_val;
-  std::regex valid_file_regex("^[a-zA-Z0-9]+\\.?[a-zA-Z0-9]+$");
+  int fflag;
+
+  std::regex valid_path_regex(
+      "^[a-zA-Z0-9\\_/\\.][a-zA-Z0-9\\_\\-/]+\\.?[a-zA-Z0-9\\_\\-]+$");
 
   /* Object to be passed around */
   GentodoData gentodo_data = {
-      .ignore_list = new IgnoreList(".gentodoignore"),
+      .ignore_list = new IgnoreList(),
       .todo_list = new TodoList(),
       .list_filename = "TODO.md", /* Default filename */
   };
 
   for (;;) {
-    ret_val = getopt(argc, argv, "e:s:o:h");
+    ret_val = getopt(argc, argv, "e:f:ho:s:");
 
     if (ret_val == -1) {
       break;
@@ -35,6 +38,26 @@ int main(int argc, char *argv[]) {
     switch (ret_val) {
       case 'e': /* Regex expression to match file extensions to scan */
         gentodo_data.file_ext_regex = optarg;
+        break;
+
+      case 'f':
+        /* FIXME: Ensure this works properly */
+        if (std::regex_match(optarg, valid_path_regex)) {
+          gentodo_data.ignore_list->load(optarg);
+        } else {
+          fprintf(stderr, "Invalid filename, see help for details.");
+          return -1;
+        }
+        fflag = 1;
+        break;
+
+      case 'o': /* output name */
+        if (std::regex_match(optarg, valid_path_regex)) {
+          gentodo_data.list_filename = optarg;
+        } else {
+          fprintf(stderr, "Invalid filename, see help for details.");
+          return -1;
+        }
         break;
 
       case 's': /* Sort by */
@@ -52,20 +75,16 @@ int main(int argc, char *argv[]) {
         }
         break;
 
-      case 'o': /* output name */
-        if (std::regex_match(optarg, valid_file_regex)) {
-          gentodo_data.list_filename = optarg;
-        } else {
-          fprintf(stderr, "Invalid filename, see help for details.");
-          return -1;
-        }
-        break;
       case '?':
       case 'h':
       default:
         print_help();
         break;
     }
+  }
+
+  if (!fflag) {
+    gentodo_data.ignore_list->load(".gentodoignore");
   }
 
   scan_dir(".", &gentodo_data);
@@ -76,6 +95,20 @@ int main(int argc, char *argv[]) {
 }
 
 static void print_help() {
-  /* TODO: CMDLN: Add help message */
-  std::cout << "Help msg\n";
+  std::cout << "Usage: gentodo [--help] [-e <regex>] [-f <ignore-path>]\n";
+  std::cout << "               [-o <output-path] [-s <sort-by>]\n";
+  std::cout << '\n';
+  std::cout << "Generate a todo list from TODO comments in a directory.\n";
+  std::cout << '\n';
+  std::cout << " --help        Show this message.\n";
+  std::cout << " -e <regex>    Set the regex string to use to search for files "
+               "to scan.\n";
+  std::cout << " -f <path>     Set the .gentodoignore file used as a list of "
+               "items in\n";
+  std::cout << "               the target directory to ignore.\n";
+  std::cout << " -o <path>     Set output file.\n";
+  std::cout << " -s <sort-by>  Specify how the output list should be sorted.\n";
+  std::cout << "               Avalable options are: \"file\", \"type\", "
+               "\"topic\".\n";
+  std::cout << '\n';
 }
